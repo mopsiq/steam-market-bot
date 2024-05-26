@@ -17,7 +17,7 @@ server.post("/test", async (request, reply) => {
   return { message: "Hello, world!" };
 });
 
-server.listen({ port }, (err, address) => {
+server.listen({ port, host: "0.0.0.0" }, (err, address) => {
   if (err) {
     console.error(err);
     process.exit(1);
