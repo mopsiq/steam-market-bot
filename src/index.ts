@@ -2,7 +2,7 @@ import fastify from "fastify";
 import { Telegraf } from "telegraf";
 
 const bot = new Telegraf(process.env.BOT_TOKEN!);
-const port = process.env.PORT || 4040;
+const port = (process.env.PORT && +process.env.PORT) || 4040;
 // const webhook = await bot.createWebhook({ domain: webhookDomain });
 
 const server = fastify({
