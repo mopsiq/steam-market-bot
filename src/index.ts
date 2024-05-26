@@ -36,7 +36,7 @@ dotenv.config();
 // Rest of the code...
 const port = (process.env.PORT && +process.env.PORT) || 6050;
 // console.log("process.env.TELEGRAM_BOT_TOKEN:", process.env.TELEGRAM_BOT_TOKEN);
-const bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN!);
+const bot = new Telegraf(process.env.TELEGRAM_API_TOKEN!);
 const app = fastify();
 
 bot.on("text", (ctx) => ctx.reply("Hello"));
