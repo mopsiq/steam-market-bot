@@ -74,7 +74,13 @@ dotenv.config();
 
 const port = (process.env.PORT && +process.env.PORT) || 6050;
 const token = process.env.TELEGRAM_BOT_TOKEN as string;
-const bot = new Bot(token);
+const bot = new Bot(token, {
+  client: { apiRoot: "https://steam-market-bot.onrender.com" },
+});
+
+// const bot = new Bot("", { // <-- use the same token as before
+//   client: { apiRoot: "localhost:8081" },
+// });
 
 bot.command("start", (ctx) =>
   ctx.reply("Welcome! Up and running with webhook.")
