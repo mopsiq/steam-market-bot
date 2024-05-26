@@ -74,6 +74,6 @@ dotenv.config();
 const bot = new Bot(process.env.TELEGRAM_BOT_TOKEN as string);
 
 bot.command("start", (ctx) => ctx.reply("Welcome! Up and running."));
-bot.on("message", (ctx) => ctx.reply("Got another message!"));
+bot.on("message", (ctx) => ctx.reply("It's replaced message!"));
 
 bot.start();
