@@ -67,13 +67,33 @@
 //   console.log(`Server is listening on ${address}`);
 // });
 
-import { Bot } from "grammy";
+import { fastify } from "fastify";
+import { Bot, webhookCallback } from "grammy";
 import dotenv from "dotenv";
 dotenv.config();
 
-const bot = new Bot(process.env.TELEGRAM_BOT_TOKEN as string);
+const port = (process.env.PORT && +process.env.PORT) || 6050;
+const token = process.env.TELEGRAM_BOT_TOKEN as string;
+const bot = new Bot(token);
 
-bot.command("start", (ctx) => ctx.reply("Welcome! Up and running."));
+bot.command("start", (ctx) =>
+  ctx.reply("Welcome! Up and running with webhook.")
+);
 bot.on("message", (ctx) => ctx.reply("It's replaced message!"));
 
-bot.start();
+const server = fastify({
+  logger: true,
+});
+
+server.post("/new-message", async (request, reply) => {
+  return { message: "Hello, it's a new message!" };
+});
+server.post(`/${token}`, webhookCallback(bot, "fastify"));
+
+server.listen({ port, host: "0.0.0.0" }, (err, address) => {
+  if (err) {
+    console.error(err);
+    process.exit(1);
+  }
+  console.log(`Server is listening on ${address}`);
+});
