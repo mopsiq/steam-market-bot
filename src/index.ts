@@ -1,6 +1,7 @@
 import { fastify } from "fastify";
 import formBody from "@fastify/formbody";
 import { Bot, webhookCallback } from "grammy";
+import express from "express";
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -21,21 +22,28 @@ bot.on("message", (ctx) => {
   const text = "Hello, world!";
 });
 
-const server = fastify({
-  logger: true,
-});
-server.register(formBody);
+const app = express();
+app.use(express.json());
+app.use(webhookCallback(bot, "express"));
 
-server.post("/new-message", async (request, reply) => {
-  return { message: "Hello, it's a new message!" };
+app.listen(port, () => {
+  console.log(`Server is listening on port ${port}`);
 });
+// const server = fastify({
+//   logger: true,
+// });
+// server.register(formBody);
 
-server.post(`/${token}`, webhookCallback(bot, "fastify"));
+// server.post("/new-message", async (request, reply) => {
+//   return { message: "Hello, it's a new message!" };
+// });
 
-server.listen({ port, host: "0.0.0.0" }, (err, address) => {
-  if (err) {
-    console.error(err);
-    process.exit(1);
-  }
-  console.log(`Server is listening on ${address}`);
-});
+// server.post(`/${token}`, webhookCallback(bot, "fastify"));
+
+// server.listen({ port, host: "0.0.0.0" }, (err, address) => {
+//   if (err) {
+//     console.error(err);
+//     process.exit(1);
+//   }
+//   console.log(`Server is listening on ${address}`);
+// });
