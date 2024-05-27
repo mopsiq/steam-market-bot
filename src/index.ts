@@ -31,29 +31,24 @@ bot.on("message", (ctx) => {
 //   console.log(`Server is listening on port ${port}`);
 // });
 
-const build = async () => {
-  const server = fastify({
-    logger: true,
-  });
-  server.register(formBody);
-  await server.register(fastifyMiddie);
-  server.use(webhookCallback(bot, "fastify") as any);
+const server = fastify({
+  logger: true,
+});
+server.register(formBody);
+// await server.register(fastifyMiddie);
+// server.use(webhookCallback(bot, "fastify"));
 
-  server.post("/new-message", async (request, reply) => {
-    return { message: "Hello, it's a new message!" };
-  });
+server.post("/new-message", async (request, reply) => {
+  return { message: "Hello, it's a new message!" };
+});
 
-  return server;
-};
+server.post(`/${token}`, webhookCallback(bot, "fastify"));
 
-// server.post(`/${token}`, webhookCallback(bot, "fastify"));
-
-build().then((server) =>
-  server.listen({ port, host: "0.0.0.0" }, async (err, address) => {
-    if (err) {
-      console.error(err);
-      process.exit(1);
-    }
-    console.log(`Server is listening on ${address}`);
-  })
-);
+server.listen({ port, host: "0.0.0.0" }, async (err, address) => {
+  if (err) {
+    console.error(err);
+    process.exit(1);
+  }
+  await bot.api.setWebhook(`https://steam-market-bot.onrender.com/${token}`);
+  console.log(`Server is listening on ${address}`);
+});
