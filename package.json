@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@fastify/formbody": "^7.4.0",
+    "@fastify/middie": "^8.3.1",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "fastify": "^4.27.0",
