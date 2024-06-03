@@ -9,10 +9,14 @@
   },
   "dependencies": {
     "@fastify/formbody": "^7.4.0",
+    "bluebird": "^3.7.2",
     "dotenv": "^16.4.5",
     "fastify": "^4.27.0",
     "grammy": "^1.23.1",
-    "ts-node": "^10.9.2"
+    "pino": "^9.1.0",
+    "pino-pretty": "7.0.0",
+    "ts-node": "^10.9.2",
+    "undici": "^6.18.2"
   },
   "devDependencies": {
     "@tsconfig/node18": "^18.2.4",

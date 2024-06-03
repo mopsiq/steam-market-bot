@@ -1,7 +1,9 @@
-import { fastify } from "fastify";
+import { FastifyRequest, fastify } from "fastify";
 import formBody from "@fastify/formbody";
 import { Bot, webhookCallback } from "grammy";
 import dotenv from "dotenv";
+import { SteamService } from "./services/SteamService";
+import { logger } from "./logger";
 dotenv.config();
 
 const port = (process.env.PORT && +process.env.PORT) || 6050;
@@ -20,11 +22,24 @@ bot.on("message", (ctx) => {
 });
 
 const server = fastify({
-  logger: true,
+  logger,
 });
 server.register(formBody);
 
 server.post(`/${token}`, webhookCallback(bot, "fastify"));
+
+server.post(
+  "/test",
+  async (req: FastifyRequest<{ Body: { url: string } }>, res) => {
+    const { url } = req.body;
+    console.log("server.post ~ url:", url);
+
+    const steamid = await SteamService.getSteamIdByURL(url);
+    if (!steamid) return;
+    // res.send(steamid);
+    console.log("steamid:", { steamid });
+  }
+);
 
 server.listen({ port, host: "0.0.0.0" }, async (err, address) => {
   if (err) {
