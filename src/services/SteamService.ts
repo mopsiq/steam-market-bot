@@ -1,7 +1,15 @@
 import { STEAM_API_KEY } from "../constants";
 import { makeRequest } from "../utils/makeRequest";
-import { SteamInventory, SteamResponse, SteamUser } from "../types/steam";
-import { SteamItemMarketPrice } from "../types/steam/SteamItemMarketPrice";
+import {
+  SteamInventory,
+  SteamResponse,
+  SteamUser,
+  SteamItemMarketPrice,
+  SteamItemHistoryMarketPrice,
+  MarketTimePresets,
+  SteamHistoryPrices,
+} from "../types/steam";
+import { getMarketPriceSampling } from "../utils/getMarketPriceSampling";
 
 interface SteamInventoryResponse {
   name: string;
@@ -97,5 +105,21 @@ export class SteamService {
     }
 
     return marketPrice;
+  }
+
+  public static async getMarketHistoryPrice(
+    appid: number,
+    marketHashName: string,
+    period: MarketTimePresets
+  ): Promise<SteamHistoryPrices[] | null> {
+    const marketPriceHistory = await makeRequest<SteamItemHistoryMarketPrice>(
+      `https://steamcommunity.com/market/pricehistory/?appid=${appid}&market_hash_name=${marketHashName}`
+    );
+
+    if (!marketPriceHistory || !marketPriceHistory.success) {
+      return null;
+    }
+
+    return getMarketPriceSampling(period, marketPriceHistory.prices);
   }
 }

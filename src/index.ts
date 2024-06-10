@@ -36,8 +36,14 @@ server.post(
 
     const steamid = await SteamService.getSteamIdByURL(url);
     if (!steamid) return;
-    // res.send(steamid);
-    console.log("steamid:", { steamid });
+    res.send(steamid);
+    // const priceHistory = await SteamService.getMarketHistoryPrice(
+    //   730,
+    //   "eSports 2014 Summer Case",
+    //   "12h"
+    // );
+    // console.log("priceHistory:", priceHistory);
+    // res.send(priceHistory);
   }
 );
 
@@ -47,5 +53,6 @@ server.listen({ port, host: "0.0.0.0" }, async (err, address) => {
     process.exit(1);
   }
   await bot.api.setWebhook(`https://steam-market-bot.onrender.com/${token}`);
-  console.log(`Server is listening on ${address}`);
 });
+
+// bot.start(); // only for dev mode

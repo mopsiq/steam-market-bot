@@ -10,6 +10,7 @@
   "dependencies": {
     "@fastify/formbody": "^7.4.0",
     "bluebird": "^3.7.2",
+    "dayjs": "^1.11.11",
     "dotenv": "^16.4.5",
     "fastify": "^4.27.0",
     "grammy": "^1.23.1",
