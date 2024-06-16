@@ -2,8 +2,8 @@ import { FastifyRequest, fastify } from "fastify";
 import formBody from "@fastify/formbody";
 import { Bot, webhookCallback } from "grammy";
 import dotenv from "dotenv";
-import { SteamService } from "./services/SteamService";
 import { logger } from "./logger";
+import { SteamService } from "./services/SteamService";
 dotenv.config();
 
 const port = (process.env.PORT && +process.env.PORT) || 6050;
@@ -34,16 +34,23 @@ server.post(
     const { url } = req.body;
     console.log("server.post ~ url:", url);
 
-    const steamid = await SteamService.getSteamIdByURL(url);
-    if (!steamid) return;
-    res.send(steamid);
-    // const priceHistory = await SteamService.getMarketHistoryPrice(
+    // const steamid = await SteamService.getSteamIdByURL(url);
+    // if (!steamid) return;
+    // res.send(steamid);
+
+    // const price = await SteamController.getHistoryPriceByPeriod(
     //   730,
     //   "eSports 2014 Summer Case",
     //   "12h"
     // );
-    // console.log("priceHistory:", priceHistory);
-    // res.send(priceHistory);
+    const priceHistory = await SteamService.getMarketHistoryPrice(
+      730,
+      "eSports 2014 Summer Case",
+      "12h"
+    );
+
+    console.log("priceHistory:", priceHistory);
+    res.send(priceHistory);
   }
 );
 

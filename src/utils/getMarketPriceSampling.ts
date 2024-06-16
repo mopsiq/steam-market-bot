@@ -17,15 +17,16 @@ export const getMarketPriceSampling = (
   const currentDate = presets[date]();
   const currentYear = DateAPI(currentDate).format("YYYY");
 
-  const priceByCurrentYear = prices
-    .filter(([priceDate]) => {
-      const [, , year] = priceDate.split(" ");
-      return year === currentYear;
-    })
-    .reverse();
+  const priceByCurrentYear = prices.filter(([priceDate]) => {
+    const [, , year] = priceDate.split(" ");
+    return year === currentYear;
+  });
 
   if (date === "lastChanges") {
-    return [priceByCurrentYear[1], priceByCurrentYear[0]];
+    return [
+      priceByCurrentYear[priceByCurrentYear.length - 2],
+      priceByCurrentYear[priceByCurrentYear.length - 1],
+    ];
   } else {
     const fromInMilliseconds = currentDate.valueOf();
     const toInMilliseconds = DateAPI().valueOf();

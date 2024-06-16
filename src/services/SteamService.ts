@@ -1,4 +1,4 @@
-import { STEAM_API_KEY } from "../constants";
+import { STEAM_API_KEY, STEAM_SESSION_LOGIN_SECURE } from "../constants";
 import { makeRequest } from "../utils/makeRequest";
 import {
   SteamInventory,
@@ -10,6 +10,7 @@ import {
   SteamHistoryPrices,
 } from "../types/steam";
 import { getMarketPriceSampling } from "../utils/getMarketPriceSampling";
+import { steamAuthorization } from "../steam-login";
 
 interface SteamInventoryResponse {
   name: string;
@@ -111,15 +112,36 @@ export class SteamService {
     appid: number,
     marketHashName: string,
     period: MarketTimePresets
-  ): Promise<SteamHistoryPrices[] | null> {
+  ): Promise<{ currency: string; prices: SteamHistoryPrices[] } | null> {
     const marketPriceHistory = await makeRequest<SteamItemHistoryMarketPrice>(
-      `https://steamcommunity.com/market/pricehistory/?appid=${appid}&market_hash_name=${marketHashName}`
+      `https://steamcommunity.com/market/pricehistory/?appid=${appid}&market_hash_name=${marketHashName}`,
+      { Cookie: `steamLoginSecure=${STEAM_SESSION_LOGIN_SECURE}` }
     );
 
     if (!marketPriceHistory || !marketPriceHistory.success) {
       return null;
     }
 
-    return getMarketPriceSampling(period, marketPriceHistory.prices);
+    return {
+      currency:
+        marketPriceHistory.price_prefix || marketPriceHistory.price_suffix,
+      prices: getMarketPriceSampling(period, marketPriceHistory.prices),
+    };
+  }
+
+  public static async getSteamLoginSecure(
+    accountName: string,
+    password: string
+  ): Promise<string | null> {
+    const steamLoginSecure = await steamAuthorization({
+      accountName,
+      password,
+    });
+
+    if (!steamLoginSecure) {
+      return null;
+    }
+
+    return steamLoginSecure;
   }
 }

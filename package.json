@@ -16,6 +16,7 @@
     "grammy": "^1.23.1",
     "pino": "^9.1.0",
     "pino-pretty": "7.0.0",
+    "steam-session": "^1.7.2",
     "ts-node": "^10.9.2",
     "undici": "^6.18.2"
   },
