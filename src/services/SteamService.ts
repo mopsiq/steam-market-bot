@@ -6,10 +6,8 @@ import {
   SteamUser,
   SteamItemMarketPrice,
   SteamItemHistoryMarketPrice,
-  MarketTimePresets,
   SteamHistoryPrices,
 } from "../types/steam";
-import { getMarketPriceSampling } from "../utils/getMarketPriceSampling";
 import { steamAuthorization } from "../steam-login";
 
 interface SteamInventoryResponse {
@@ -110,8 +108,7 @@ export class SteamService {
 
   public static async getMarketHistoryPrice(
     appid: number,
-    marketHashName: string,
-    period: MarketTimePresets
+    marketHashName: string
   ): Promise<{ currency: string; prices: SteamHistoryPrices[] } | null> {
     const marketPriceHistory = await makeRequest<SteamItemHistoryMarketPrice>(
       `https://steamcommunity.com/market/pricehistory/?appid=${appid}&market_hash_name=${marketHashName}`,
@@ -125,7 +122,7 @@ export class SteamService {
     return {
       currency:
         marketPriceHistory.price_prefix || marketPriceHistory.price_suffix,
-      prices: getMarketPriceSampling(period, marketPriceHistory.prices),
+      prices: marketPriceHistory.prices,
     };
   }
 

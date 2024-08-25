@@ -3,7 +3,7 @@ import formBody from "@fastify/formbody";
 import { Bot, webhookCallback } from "grammy";
 import dotenv from "dotenv";
 import { logger } from "./logger";
-import { SteamService } from "./services/SteamService";
+import { MarketService } from "./services/MarketService";
 dotenv.config();
 
 const port = (process.env.PORT && +process.env.PORT) || 6050;
@@ -32,25 +32,18 @@ server.post(
   "/test",
   async (req: FastifyRequest<{ Body: { url: string } }>, res) => {
     const { url } = req.body;
-    console.log("server.post ~ url:", url);
 
     // const steamid = await SteamService.getSteamIdByURL(url);
     // if (!steamid) return;
     // res.send(steamid);
 
-    // const price = await SteamController.getHistoryPriceByPeriod(
-    //   730,
-    //   "eSports 2014 Summer Case",
-    //   "12h"
-    // );
-    const priceHistory = await SteamService.getMarketHistoryPrice(
+    const pricesHistory = await MarketService.getMarketItemStats(
       730,
       "eSports 2014 Summer Case",
-      "12h"
+      "1w"
     );
 
-    console.log("priceHistory:", priceHistory);
-    res.send(priceHistory);
+    res.send(pricesHistory);
   }
 );
 
